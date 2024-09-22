@@ -27,26 +27,6 @@ nav ul li a {
     text-decoration: none;
 }
 
-section {
-    margin: 20px;
-}
-
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-}h1 {
-    animation: fadeIn 2s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
 .gallery {
     display: flex;
     flex-wrap: wrap;
@@ -54,41 +34,25 @@ footer {
 }
 
 .gallery img {
-    width: 30%; /* prilagodi širinu slika */
+    width: 30%;
     height: auto;
+    transition: transform 0.3s ease, filter 0.3s ease;
 }
+
 .gallery img.large {
     transform: scale(1.5);
-    transition: transform 0.3s ease;
-}
-form {
-    display: flex;
-    flex-direction: column;
-    max-width: 400px;
-    margin: 20px auto;
 }
 
-label {
-    margin: 10px 0 5px;
+.gallery img:hover {
+    transform: scale(1.1); /* Blagi zoom efekt na hover */
+    filter:brightness(0.7);
 }
 
-input, textarea {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 15px;
+.fade-in {
+    animation: fadeIn 2s ease-in;
 }
 
-button {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
-
-button:hover {
-    background-color: #555;
-}
-

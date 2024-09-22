@@ -22,4 +22,17 @@ document.getElementById('contact-form').addEventListener('submit', function(even
     // Ovdje bi se mogla dodati logika za slanje podataka na server
     alert('Hvala što ste nas kontaktirali, ' + name + '!');
 });
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('.gallery img');
+    images.forEach(img => {
+        img.addEventListener('click', function() {
+            img.classList.toggle('large');
+            console.log('Clicked:', img.src);
+        });
+        
+        img.addEventListener('animationend', function() {
+            img.style.opacity = '0.5'; // smanjiti prozirnost nakon animacije
+        });
+    });
+});
 
