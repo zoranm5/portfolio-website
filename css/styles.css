@@ -57,3 +57,7 @@ footer {
     width: 30%; /* prilagodi širinu slika */
     height: auto;
 }
+.gallery img.large {
+    transform: scale(1.5);
+    transition: transform 0.3s ease;
+}
