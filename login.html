@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="hr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+      import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+        onAuthStateChanged,
+      } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+
+      const firebaseConfig = {
+        apiKey: 'AIzaSyAC0yqfl_GYNHo3dHzz6osOL9jhG2tIpgQ',
+        authDomain: 'portfolio-website-f0d70.firebaseapp.com',
+        projectId: 'portfolio-website-f0d70',
+        storageBucket: 'portfolio-website-f0d70.appspot.com',
+        messagingSenderId: '902751992770',
+        appId: '1:902751992770:web:aa52bc6f9b4c40aa0f345b',
+        measurementId: 'G-4T21Y6PT0Z',
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const loginButton = document.getElementById('login-button');
+        const logoutButton = document.getElementById('logout-button');
+
+        loginButton.addEventListener('click', () => {
+          const provider = new GoogleAuthProvider();
+          signInWithPopup(auth, provider)
+            .then((result) => {
+              console.log('Uspješan login:', result.user);
+              // Sakrij gumb za prijavu i prikaži gumb za odjavu
+              loginButton.style.display = 'none';
+              logoutButton.style.display = 'block';
+            })
+            .catch((error) => {
+              console.error('Greška prilikom prijave:', error);
+            });
+        });
+
+        logoutButton.addEventListener('click', () => {
+          auth
+            .signOut()
+            .then(() => {
+              console.log('User signed out');
+              // Sakrij gumb za odjavu i prikaži gumb za prijavu
+              logoutButton.style.display = 'none';
+              loginButton.style.display = 'block';
+            })
+            .catch((error) => {
+              console.error('Greška prilikom odjave:', error);
+            });
+        });
+
+        // Provjerava stanje autentifikacije
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            // Korisnik je prijavljen
+            console.log('Korisnik je prijavljen:', user);
+            logoutButton.style.display = 'block';
+            loginButton.style.display = 'none';
+          } else {
+            // Korisnik nije prijavljen
+            console.log('Korisnik nije prijavljen');
+            logoutButton.style.display = 'none';
+            loginButton.style.display = 'block';
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Prijava</h1>
+    <button id="login-button">Prijavi se s Googleom</button>
+    <button id="logout-button" style="display: none">Odjavi se</button>
+  </body>
+</html>
