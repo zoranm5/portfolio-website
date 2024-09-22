@@ -1,38 +1,24 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     const images = document.querySelectorAll('.gallery img');
-    images.forEach(img => {
-        img.addEventListener('click', function() {
-            img.classList.toggle('large');
-            console.log('Clicked:', img.src);  // Dodano za debug
+    const filterButtons = document.querySelectorAll('.filter button');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = button.getAttribute('data-filter');
+            images.forEach(img => {
+                if (filter === 'all' || img.classList.contains(filter)) {
+                    img.style.display = 'block';
+                } else {
+                    img.style.display = 'none';
+                }
+            });
         });
     });
-});
-document.getElementById('contact-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Spriječava ponovno učitavanje stranice
 
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
-
-    console.log('Ime:', name);
-    console.log('Email:', email);
-    console.log('Poruka:', message);
-
-    // Ovdje bi se mogla dodati logika za slanje podataka na server
-    alert('Hvala što ste nas kontaktirali, ' + name + '!');
-});
-document.addEventListener('DOMContentLoaded', function() {
-    const images = document.querySelectorAll('.gallery img');
     images.forEach(img => {
         img.addEventListener('click', function() {
             img.classList.toggle('large');
             console.log('Clicked:', img.src);
         });
-        
-        img.addEventListener('animationend', function() {
-            img.style.opacity = '0.5'; // smanjiti prozirnost nakon animacije
-        });
     });
 });
-
