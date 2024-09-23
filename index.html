@@ -20,7 +20,9 @@
     </header>
     <section>
       <h2>O meni</h2>
-      <p>Ja sam [Tvoje Ime], web developer.</p>
+      <p id="user-info">
+        Ja sam <span id="user-name">[Tvoje Ime]</span>, web developer.
+      </p>
     </section>
     <h1>Dobrodošli!</h1>
     <p id="user-name"></p>
@@ -74,6 +76,15 @@
                 console.error('Greška prilikom odjave:', error);
               });
           });
+        // Prikaz imena korisnika
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            document.getElementById('user-name').textContent = user.displayName; // Postavi ime korisnika
+            document.getElementById('logout-button').style.display = 'block';
+          } else {
+            window.location.href = 'login.html'; // Ako korisnik nije prijavljen, preusmjeri na login stranicu
+          }
+        });
       });
     </script>
   </body>
