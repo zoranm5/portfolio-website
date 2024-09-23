@@ -22,10 +22,59 @@
       <h2>O meni</h2>
       <p>Ja sam [Tvoje Ime], web developer.</p>
     </section>
+    <h1>Dobrodošli!</h1>
+    <p id="user-name"></p>
+    <button id="logout-button" style="display: none">Odjavi se</button>
+
     <footer>
       <p>&copy; 2024 My Portfolio</p>
     </footer>
-    <script src="js/scripts.js"></script>
-    <script src="js/script.js"></script>
+
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+      import {
+        getAuth,
+        signOut,
+        onAuthStateChanged,
+      } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+
+      const firebaseConfig = {
+        apiKey: 'AIzaSyAC0yqfl_GYNHo3dHzz6osOL9jhG2tIpgQ',
+        authDomain: 'portfolio-website-f0d70.firebaseapp.com',
+        projectId: 'portfolio-website-f0d70',
+        storageBucket: 'portfolio-website-f0d70.appspot.com',
+        messagingSenderId: '902751992770',
+        appId: '1:902751992770:web:aa52bc6f9b4c40aa0f345b',
+        measurementId: 'G-4T21Y6PT0Z',
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const userName = localStorage.getItem('userName');
+        if (userName) {
+          document.getElementById(
+            'user-name'
+          ).textContent = `Prijavljeni ste kao: ${userName}`;
+          document.getElementById('logout-button').style.display = 'block';
+        }
+
+        document
+          .getElementById('logout-button')
+          .addEventListener('click', () => {
+            signOut(auth)
+              .then(() => {
+                // Očisti localStorage
+                localStorage.removeItem('userName');
+                // Preusmjeravanje na login.html nakon odjave
+                window.location.href = 'login.html';
+              })
+              .catch((error) => {
+                console.error('Greška prilikom odjave:', error);
+              });
+          });
+      });
+    </script>
   </body>
 </html>

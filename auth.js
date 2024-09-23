@@ -21,7 +21,8 @@ document.getElementById('login-button').addEventListener('click', function() {
     signInWithPopup(auth, provider)
         .then((result) => {
             console.log('User signed in:', result.user);
-            // Ovdje možeš preusmjeriti korisnika na drugu stranicu
+            // Preusmjeri na index.html nakon uspješnog logiranja
+    
         })
         .catch((error) => {
             console.error('Error during sign-in:', error);
