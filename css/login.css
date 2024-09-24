@@ -1,47 +1,83 @@
 /* stilizacija cijelog tijela */
-
 body {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    justify-content: flex-start; /* Align items to the top */
     height: 100vh;
-    margin:0;
+    margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
 }
 
-/*kontejner za login*/
+/* Kontejner za vremensku prognozu */
+.forecast-container {
+    display: flex;
+    justify-content: center; /* Center items horizontally */
+    align-items: flex-start; /* Align items to the top */
+    margin-top: 20px; /* Space above the forecast */
+    flex-wrap: nowrap; /* Prevent wrapping to the next line */
+}
 
-.login-container{
-    background-color:#ffffff;
-    padding:2rem;
-    border-radius:8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Pravokutnik za prognozu */
+.forecast-item {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px; /* Spacing between items */
     text-align: center;
+    width: 120px; /* Fixed width for uniformity */
+    height: 180px; /* Increased height for additional text */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
-/*Naslov*/
-.login-container {
-    margin-bottom:1.5rem;
-    color:#333333;
-}
-#login-button {
 
-    background-color: #4285F4;
-    color:white;
-    border: none;
-    padding:0.7rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor:pointer;
-    transition: background-color 0.3s ease;
+/* Dan u tjednu */
+.day-name {
+    font-weight: bold; /* Make the day name bold */
+    margin-bottom: 5px; /* Space below the day name */
 }
-#login-button:hover{
+
+/* Stilizacija gumba za prijavu */
+.login-container {
+    text-align: center;
+    margin-top: 60px; /* Increased space above the button to lower it */
+}
+
+#login-button {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 0.9rem 2rem; /* Adjust padding for larger button */
+    font-size: 1.1rem; /* Slightly larger font size */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add subtle shadow */
+}
+
+#login-button:hover {
     background-color: #357ae8;
 }
 
-#login-button:focus{
+#login-button:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.5);
 }
 
+/* Ikone za vremensku prognozu */
+.weather-icon {
+    width: 50px; /* Adjust icon size */
+    height: 50px; /* Adjust icon size */
+}
 
+/* Opis vremenskih uvjeta */
+.weather-description {
+    margin-top: 5px; /* Space above the description */
+    font-size: 0.9rem; /* Adjust font size */
+    color: #555; /* Color for the description */
+}

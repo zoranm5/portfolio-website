@@ -3,6 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
+    ></script>
+    <script type="text/javascript">
+      (function () {
+        emailjs.init('w2e7Xq0Cva_DkqHDh'); // Replace with your Public Key
+      })();
+    </script>
     <link rel="stylesheet" href="css/styles.css" />
     <title>Kontakt</title>
   </head>
@@ -21,6 +30,31 @@
       <button type="submit">Pošalji</button>
     </form>
 
-    <script src="js/contact.js"></script>
+    <script>
+      document
+        .getElementById('contact-form')
+        .addEventListener('submit', function (event) {
+          event.preventDefault();
+
+          // Podaci iz forme
+          const formData = new FormData(this);
+          const data = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            message: formData.get('message'),
+          };
+
+          // Korištenje EmailJS za slanje emaila
+          emailjs.send('service_agfztds', 'template_cbdcccx', data).then(
+            function (response) {
+              alert('Poruka uspješno poslana!');
+            },
+            function (error) {
+              console.error('Greška prilikom slanja:', error);
+              alert('Greška prilikom slanja poruke.');
+            }
+          );
+        });
+    </script>
   </body>
 </html>
