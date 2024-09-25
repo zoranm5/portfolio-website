@@ -8,26 +8,25 @@
   </head>
   <body>
     <h1>Moja Galerija</h1>
+    <button id="fb-login-btn">Prijavi se putem Facebooka</button>
+
     <div class="gallery">
       <img
         src="images/oslo1.jpg"
         class="gallery-image"
         data-title="Slika 1"
-        data-id="image1"
         alt="Slika 1"
       />
       <img
         src="images/oslo2.png"
         class="gallery-image"
         data-title="Slika 2"
-        data-id="image2"
         alt="Slika 2"
       />
       <img
         src="images/oslo3.jpg"
         class="gallery-image"
         data-title="Slika 3"
-        data-id="image3"
         alt="Slika 3"
       />
     </div>
@@ -43,155 +42,153 @@
           alt="Slika"
           style="width: 100%; border-radius: 5px; margin-bottom: 10px"
         />
-        <div id="comment-section">
-          <h3>Komentari</h3>
-          <div id="comments-list"></div>
-          <!-- Section to display comments -->
-        </div>
         <textarea
           id="comment"
           placeholder="Ostavite komentar ovdje..."
         ></textarea>
         <button id="submit-comment">Pošalji</button>
-        <button id="update-comment" style="display: none">Ažuriraj</button>
+        <div id="comment-section"></div>
       </div>
     </div>
 
     <script>
+      // Facebook SDK
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: '1029888568878799', // Zamijeni s pravim ID-om
+          cookie: true,
+          xfbml: true,
+          version: 'v12.0',
+        });
+
+        FB.AppEvents.logPageView();
+
+        // Provjeri da li je korisnik već prijavljen
+        FB.getLoginStatus(function (response) {
+          statusChangeCallback(response);
+        });
+      };
+
+      // Dodaj ovu funkciju
+      function statusChangeCallback(response) {
+        if (response.status === 'connected') {
+          document.getElementById('fb-login-btn').style.display = 'none'; // Sakrij dugme za prijavu
+          document.getElementById('fb-logout-btn').style.display = 'block'; // Prikaži dugme za odjavu
+        } else {
+          document.getElementById('fb-login-btn').style.display = 'block'; // Prikaži dugme za prijavu
+          document.getElementById('fb-logout-btn').style.display = 'none'; // Sakrij dugme za odjavu
+        }
+      }
+
+      // Prijava
+      document
+        .getElementById('fb-login-btn')
+        .addEventListener('click', function () {
+          FB.login(
+            function (response) {
+              if (response.authResponse) {
+                console.log('Uspješno prijavljen', response);
+                statusChangeCallback(response); // Ažuriraj stanje
+              } else {
+                console.log('Korisnik je otkazao prijavu');
+              }
+            },
+            { scope: 'public_profile,email' }
+          );
+        });
+
+      // Odjava
+      document.addEventListener('DOMContentLoaded', function () {
+        // Kreiraj dugme za odjavu
+        const logoutBtn = document.createElement('button');
+        logoutBtn.id = 'fb-logout-btn';
+        logoutBtn.textContent = 'Odjavi se';
+        logoutBtn.style.display = 'none'; // Sakrij dugme za odjavu
+        document.body.appendChild(logoutBtn);
+
+        // Dodaj listener za odjavu
+        logoutBtn.addEventListener('click', function () {
+          FB.logout(function (response) {
+            console.log('Odjavili ste se', response);
+            statusChangeCallback(response); // Ažuriraj stanje
+          });
+        });
+      });
+
+      // Modal functionality
       var modal = document.getElementById('commentModal');
       var modalImage = document.getElementById('modal-image');
       var modalImageTitle = document.getElementById('modal-image-title');
-      var commentsList = document.getElementById('comments-list');
-      var currentImageId;
-      var imageComments = {}; // Object to store comments for each image
-      var editingCommentIndex = -1; // Index to track the comment being edited
-    
       var images = document.querySelectorAll('.gallery-image');
       var span = document.getElementsByClassName('close')[0];
-    
-      // Open modal and load comments
+
       images.forEach(function (image) {
         image.addEventListener('click', function () {
           modal.style.display = 'block';
-          currentImageId = this.getAttribute('data-id');
           modalImageTitle.textContent = this.getAttribute('data-title');
           modalImage.src = this.src;
-          loadComments(currentImageId);
+          loadComments(); // Load comments when opening the modal
         });
       });
-    
-      // Close modal
+
       span.onclick = function () {
         modal.style.display = 'none';
-        resetForm();
+        clearComment(); // Clear the comment textarea
       };
-    
+
       window.onclick = function (event) {
         if (event.target == modal) {
           modal.style.display = 'none';
-          resetForm();
+          clearComment(); // Clear the comment textarea
         }
       };
-    
-      // Load comments for the current image
-      function loadComments(imageId) {
-        commentsList.innerHTML = '';
-        var comments = imageComments[imageId] || [];
-        comments.forEach(function (comment, index) {
-          var commentItem = document.createElement('div');
-          commentItem.classList.add('comment-item');
-          commentItem.innerHTML = `
-            <p>${comment}</p>
-            <button class="edit-btn" data-index="${index}">Uredi</button>
-            <button class="delete-btn" data-index="${index}">Izbriši</button>
-            <div class="delete-confirm" id="delete-confirm-${index}" style="display: none;">
-              <span>Jeste li sigurni da želite izbrisati ovaj komentar?</span>
-              <button class="confirm-delete" data-index="${index}">Da</button>
-              <button class="cancel-delete" data-index="${index}">Ne</button>
-            </div>
-          `;
-          commentsList.appendChild(commentItem);
-        });
-    
-        // Add event listeners for edit, delete, confirm, and cancel buttons
-        document.querySelectorAll('.edit-btn').forEach(function (button) {
-          button.addEventListener('click', function () {
-            var index = this.getAttribute('data-index');
-            startEditingComment(index);
-          });
-        });
-    
-        document.querySelectorAll('.delete-btn').forEach(function (button) {
-          button.addEventListener('click', function () {
-            var index = this.getAttribute('data-index');
-            document.getElementById(`delete-confirm-${index}`).style.display = 'block'; // Show confirmation options
-          });
-        });
-    
-        document.querySelectorAll('.confirm-delete').forEach(function (button) {
-          button.addEventListener('click', function () {
-            var index = this.getAttribute('data-index');
-            deleteComment(index);
-          });
-        });
-    
-        document.querySelectorAll('.cancel-delete').forEach(function (button) {
-          button.addEventListener('click', function () {
-            var index = this.getAttribute('data-index');
-            document.getElementById(`delete-confirm-${index}`).style.display = 'none'; // Hide confirmation options
-          });
-        });
-      }
-    
-      // Start editing a comment
-      function startEditingComment(index) {
-        var comments = imageComments[currentImageId] || [];
-        document.getElementById('comment').value = comments[index];
-        document.getElementById('submit-comment').style.display = 'none';
-        document.getElementById('update-comment').style.display = 'block';
-        editingCommentIndex = index;
-      }
-    
-      // Submit a new comment
-      document.getElementById('submit-comment').addEventListener('click', function () {
-        var comment = document.getElementById('comment').value;
-        if (comment) {
-          if (!imageComments[currentImageId]) {
-            imageComments[currentImageId] = [];
+
+      document
+        .getElementById('submit-comment')
+        .addEventListener('click', function () {
+          var comment = document.getElementById('comment').value;
+          if (comment) {
+            var commentSection = document.getElementById('comment-section');
+            var commentDiv = document.createElement('div');
+            commentDiv.textContent = comment;
+
+            // Create edit and delete buttons
+            var editButton = document.createElement('button');
+            editButton.textContent = 'Uredi';
+            editButton.onclick = function () {
+              document.getElementById('comment').value = comment;
+              commentDiv.remove();
+            };
+
+            var deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Izbriši';
+            deleteButton.onclick = function () {
+              if (confirm('Da li ste sigurni da želite obrisati komentar?')) {
+                commentDiv.remove();
+              }
+            };
+
+            commentDiv.appendChild(editButton);
+            commentDiv.appendChild(deleteButton);
+            commentSection.appendChild(commentDiv);
+            clearComment(); // Clear the comment textarea
           }
-          imageComments[currentImageId].push(comment);
-          loadComments(currentImageId);
-          resetForm();
-        } else {
-          alert('Unesite komentar prije slanja.');
-        }
-      });
-    
-      // Update an existing comment
-      document.getElementById('update-comment').addEventListener('click', function () {
-        var comment = document.getElementById('comment').value;
-        if (comment && editingCommentIndex > -1) {
-          imageComments[currentImageId][editingCommentIndex] = comment;
-          loadComments(currentImageId);
-          resetForm();
-        } else {
-          alert('Unesite komentar prije ažuriranja.');
-        }
-      });
-    
-      // Delete a comment
-      function deleteComment(index) {
-        imageComments[currentImageId].splice(index, 1);
-        loadComments(currentImageId);
-      }
-    
-      // Reset form and hide update button
-      function resetForm() {
+        });
+
+      function clearComment() {
         document.getElementById('comment').value = '';
-        document.getElementById('submit-comment').style.display = 'block';
-        document.getElementById('update-comment').style.display = 'none';
-        editingCommentIndex = -1;
+      }
+
+      function loadComments() {
+        // Load comments from storage or server
       }
     </script>
-    
+
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js"
+    ></script>
+  </body>
 </html>
