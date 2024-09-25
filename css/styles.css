@@ -18,77 +18,77 @@
     transform: scale(1.05); /* Add a slight zoom effect on hover */
   }
   
-  /* Modal styles */
+ /* Modal styles */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    background-color: rgba(0, 0, 0, 0.7); /* Black background with opacity */
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
   }
   
   .modal-content {
-    background-color: white; /* White background for modal content */
-    margin: 10% auto; /* Center the modal */
-    padding: 10px; /* Padding inside modal */
-    width: 30%; /* Modal width */
-    border-radius: 10px; /* Rounded corners */
+    background-color: white;
+    margin: 10% auto;
+    padding: 10px;
+    width: 30%;
+    border-radius: 10px;
   }
   
   .close {
-    color: #aaa; /* Light grey color for close button */
-    float: right; /* Position close button to the right */
-    font-size: 28px; /* Font size for close button */
-    font-weight: bold; /* Bold font for close button */
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
   }
   
   .close:hover,
   .close:focus {
-    color: black; /* Darker color on hover */
-    text-decoration: none; /* No underline on hover */
-    cursor: pointer; /* Pointer cursor on hover */
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
   }
   
   #modal-image {
-    max-width: 100%; /* Responsive image */
-    border-radius: 5px; /* Rounded corners for image */
-    margin-bottom: 10px; /* Space below the image */
+    max-width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
   }
   
-  /* Reduced textarea and button styles to fit smaller modal */
+  #comment-section {
+    margin-bottom: 15px;
+  }
+  
+  #comments-list {
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+  }
+  
+  #comments-list p {
+    margin: 5px 0;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+  }
+  
   textarea {
-    width: 100%; /* Full width for textarea */
-    height: 60px; /* Height of textarea */
-    padding: 8px; /* Padding inside textarea */
-    border-radius: 5px; /* Rounded corners */
-    border: 1px solid #ccc; /* Border for textarea */
-    margin-bottom: 10px; /* Space below textarea */
+    width: 100%;
+    height: 60px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
   }
   
   #submit-comment {
-    padding: 8px 15px; /* Padding for submit button */
-    background-color: #28a745; /* Green background */
-    color: white; /* White text */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-  }
-  
-  /* Gallery styles */
-  .gallery {
-    display: flex; /* Flexbox layout */
-    justify-content: space-between; /* Space between items */
-    flex-wrap: wrap; /* Wrap items to the next line */
-    gap: 3px; /* Minimized space between images */
-  }
-  
-  .gallery-image {
-    width: 320px; /* Increased image size */
-    height: auto; /* Auto height */
-    border-radius: 5px; /* Rounded corners */
-    object-fit: cover; /* Cover image */
+    padding: 8px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
   }
   

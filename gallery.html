@@ -8,32 +8,27 @@
   </head>
   <body>
     <h1>Moja Galerija</h1>
-
-    <!-- Filter section -->
-    <div id="filter-section">
-      <button class="filter-btn" data-category="all">Sve</button>
-      <button class="filter-btn" data-category="priroda">Priroda</button>
-      <button class="filter-btn" data-category="radovi">Radovi</button>
-    </div>
-
     <div class="gallery">
       <img
         src="images/oslo1.jpg"
-        class="gallery-image priroda"
-        data-title="Priroda 1"
-        alt="Priroda 1"
+        class="gallery-image"
+        data-title="Slika 1"
+        data-id="image1"
+        alt="Slika 1"
       />
       <img
         src="images/oslo2.png"
-        class="gallery-image radovi"
-        data-title="Radovi 1"
-        alt="Radovi 1"
+        class="gallery-image"
+        data-title="Slika 2"
+        data-id="image2"
+        alt="Slika 2"
       />
       <img
         src="images/oslo3.jpg"
-        class="gallery-image priroda"
-        data-title="Priroda 2"
-        alt="Priroda 2"
+        class="gallery-image"
+        data-title="Slika 3"
+        data-id="image3"
+        alt="Slika 3"
       />
     </div>
 
@@ -48,88 +43,155 @@
           alt="Slika"
           style="width: 100%; border-radius: 5px; margin-bottom: 10px"
         />
+        <div id="comment-section">
+          <h3>Komentari</h3>
+          <div id="comments-list"></div>
+          <!-- Section to display comments -->
+        </div>
         <textarea
           id="comment"
           placeholder="Ostavite komentar ovdje..."
-          style="
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-          "
         ></textarea>
-        <button
-          id="submit-comment"
-          style="
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-          "
-        >
-          Pošalji
-        </button>
+        <button id="submit-comment">Pošalji</button>
+        <button id="update-comment" style="display: none">Ažuriraj</button>
       </div>
     </div>
 
     <script>
-      // Modal logic (unchanged)
       var modal = document.getElementById('commentModal');
       var modalImage = document.getElementById('modal-image');
       var modalImageTitle = document.getElementById('modal-image-title');
+      var commentsList = document.getElementById('comments-list');
+      var currentImageId;
+      var imageComments = {}; // Object to store comments for each image
+      var editingCommentIndex = -1; // Index to track the comment being edited
+    
       var images = document.querySelectorAll('.gallery-image');
       var span = document.getElementsByClassName('close')[0];
-
+    
+      // Open modal and load comments
       images.forEach(function (image) {
         image.addEventListener('click', function () {
           modal.style.display = 'block';
+          currentImageId = this.getAttribute('data-id');
           modalImageTitle.textContent = this.getAttribute('data-title');
           modalImage.src = this.src;
+          loadComments(currentImageId);
         });
       });
-
+    
+      // Close modal
       span.onclick = function () {
         modal.style.display = 'none';
+        resetForm();
       };
-
+    
       window.onclick = function (event) {
         if (event.target == modal) {
           modal.style.display = 'none';
+          resetForm();
         }
       };
-
-      document
-        .getElementById('submit-comment')
-        .addEventListener('click', function () {
-          var comment = document.getElementById('comment').value;
-          if (comment) {
-            alert(
-              'Komentar za ' + modalImageTitle.textContent + ': ' + comment
-            );
-            modal.style.display = 'none';
-            document.getElementById('comment').value = '';
-          } else {
-            alert('Unesite komentar prije slanja.');
-          }
+    
+      // Load comments for the current image
+      function loadComments(imageId) {
+        commentsList.innerHTML = '';
+        var comments = imageComments[imageId] || [];
+        comments.forEach(function (comment, index) {
+          var commentItem = document.createElement('div');
+          commentItem.classList.add('comment-item');
+          commentItem.innerHTML = `
+            <p>${comment}</p>
+            <button class="edit-btn" data-index="${index}">Uredi</button>
+            <button class="delete-btn" data-index="${index}">Izbriši</button>
+            <div class="delete-confirm" id="delete-confirm-${index}" style="display: none;">
+              <span>Jeste li sigurni da želite izbrisati ovaj komentar?</span>
+              <button class="confirm-delete" data-index="${index}">Da</button>
+              <button class="cancel-delete" data-index="${index}">Ne</button>
+            </div>
+          `;
+          commentsList.appendChild(commentItem);
         });
-
-      // Filter functionality
-      var filterButtons = document.querySelectorAll('.filter-btn');
-
-      filterButtons.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var category = this.getAttribute('data-category');
-          images.forEach(function (img) {
-            if (category === 'all' || img.classList.contains(category)) {
-              img.style.display = 'block';
-            } else {
-              img.style.display = 'none';
-            }
+    
+        // Add event listeners for edit, delete, confirm, and cancel buttons
+        document.querySelectorAll('.edit-btn').forEach(function (button) {
+          button.addEventListener('click', function () {
+            var index = this.getAttribute('data-index');
+            startEditingComment(index);
           });
         });
+    
+        document.querySelectorAll('.delete-btn').forEach(function (button) {
+          button.addEventListener('click', function () {
+            var index = this.getAttribute('data-index');
+            document.getElementById(`delete-confirm-${index}`).style.display = 'block'; // Show confirmation options
+          });
+        });
+    
+        document.querySelectorAll('.confirm-delete').forEach(function (button) {
+          button.addEventListener('click', function () {
+            var index = this.getAttribute('data-index');
+            deleteComment(index);
+          });
+        });
+    
+        document.querySelectorAll('.cancel-delete').forEach(function (button) {
+          button.addEventListener('click', function () {
+            var index = this.getAttribute('data-index');
+            document.getElementById(`delete-confirm-${index}`).style.display = 'none'; // Hide confirmation options
+          });
+        });
+      }
+    
+      // Start editing a comment
+      function startEditingComment(index) {
+        var comments = imageComments[currentImageId] || [];
+        document.getElementById('comment').value = comments[index];
+        document.getElementById('submit-comment').style.display = 'none';
+        document.getElementById('update-comment').style.display = 'block';
+        editingCommentIndex = index;
+      }
+    
+      // Submit a new comment
+      document.getElementById('submit-comment').addEventListener('click', function () {
+        var comment = document.getElementById('comment').value;
+        if (comment) {
+          if (!imageComments[currentImageId]) {
+            imageComments[currentImageId] = [];
+          }
+          imageComments[currentImageId].push(comment);
+          loadComments(currentImageId);
+          resetForm();
+        } else {
+          alert('Unesite komentar prije slanja.');
+        }
       });
+    
+      // Update an existing comment
+      document.getElementById('update-comment').addEventListener('click', function () {
+        var comment = document.getElementById('comment').value;
+        if (comment && editingCommentIndex > -1) {
+          imageComments[currentImageId][editingCommentIndex] = comment;
+          loadComments(currentImageId);
+          resetForm();
+        } else {
+          alert('Unesite komentar prije ažuriranja.');
+        }
+      });
+    
+      // Delete a comment
+      function deleteComment(index) {
+        imageComments[currentImageId].splice(index, 1);
+        loadComments(currentImageId);
+      }
+    
+      // Reset form and hide update button
+      function resetForm() {
+        document.getElementById('comment').value = '';
+        document.getElementById('submit-comment').style.display = 'block';
+        document.getElementById('update-comment').style.display = 'none';
+        editingCommentIndex = -1;
+      }
     </script>
-  </body>
+    
 </html>
