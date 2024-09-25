@@ -7,27 +7,129 @@
     <title>Galerija</title>
   </head>
   <body>
-    <header>
-      <h1 class="fade-in">Moja Galerija</h1>
-      <div class="filter">
-        <button data-filter="all">Sve</button>
-        <button data-filter="nature">Priroda</button>
-        <button data-filter="city">Grad</button>
+    <h1>Moja Galerija</h1>
+
+    <!-- Filter section -->
+    <div id="filter-section">
+      <button class="filter-btn" data-category="all">Sve</button>
+      <button class="filter-btn" data-category="priroda">Priroda</button>
+      <button class="filter-btn" data-category="radovi">Radovi</button>
+    </div>
+
+    <div class="gallery">
+      <img
+        src="images/oslo1.jpg"
+        class="gallery-image priroda"
+        data-title="Priroda 1"
+        alt="Priroda 1"
+      />
+      <img
+        src="images/oslo2.png"
+        class="gallery-image radovi"
+        data-title="Radovi 1"
+        alt="Radovi 1"
+      />
+      <img
+        src="images/oslo3.jpg"
+        class="gallery-image priroda"
+        data-title="Priroda 2"
+        alt="Priroda 2"
+      />
+    </div>
+
+    <!-- Modal for displaying image and comments -->
+    <div id="commentModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modal-image-title">Komentiraj ovu sliku</h2>
+        <img
+          id="modal-image"
+          src=""
+          alt="Slika"
+          style="width: 100%; border-radius: 5px; margin-bottom: 10px"
+        />
+        <textarea
+          id="comment"
+          placeholder="Ostavite komentar ovdje..."
+          style="
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+          "
+        ></textarea>
+        <button
+          id="submit-comment"
+          style="
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+          "
+        >
+          Pošalji
+        </button>
       </div>
-      <nav>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="gallery.html">Gallery</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-      </nav>
-    </header>
-    <section class="gallery">
-      <img src="images/oslo1.jpg" alt="Oslo 1" class="nature" />
-      <img src="images/oslo2.png" alt="Oslo 2" class="city" />
-      <img src="images/oslo3.jpg" alt="Oslo 3" class="nature" />
-    </section>
-    <script src="js/script.js" defer></script>
+    </div>
+
+    <script>
+      // Modal logic (unchanged)
+      var modal = document.getElementById('commentModal');
+      var modalImage = document.getElementById('modal-image');
+      var modalImageTitle = document.getElementById('modal-image-title');
+      var images = document.querySelectorAll('.gallery-image');
+      var span = document.getElementsByClassName('close')[0];
+
+      images.forEach(function (image) {
+        image.addEventListener('click', function () {
+          modal.style.display = 'block';
+          modalImageTitle.textContent = this.getAttribute('data-title');
+          modalImage.src = this.src;
+        });
+      });
+
+      span.onclick = function () {
+        modal.style.display = 'none';
+      };
+
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      };
+
+      document
+        .getElementById('submit-comment')
+        .addEventListener('click', function () {
+          var comment = document.getElementById('comment').value;
+          if (comment) {
+            alert(
+              'Komentar za ' + modalImageTitle.textContent + ': ' + comment
+            );
+            modal.style.display = 'none';
+            document.getElementById('comment').value = '';
+          } else {
+            alert('Unesite komentar prije slanja.');
+          }
+        });
+
+      // Filter functionality
+      var filterButtons = document.querySelectorAll('.filter-btn');
+
+      filterButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var category = this.getAttribute('data-category');
+          images.forEach(function (img) {
+            if (category === 'all' || img.classList.contains(category)) {
+              img.style.display = 'block';
+            } else {
+              img.style.display = 'none';
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>

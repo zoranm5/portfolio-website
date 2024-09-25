@@ -1,133 +1,94 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
-
-header {
-    background-color: #333;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
-}
-
-nav ul {
-    list-style: none;
-    padding: 0;
-}
-
-nav ul li {
-    display: inline;
-    margin: 0 10px;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-}
-
-section {
-    margin: 20px;
-}
-
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-}
-
-form {
-    max-width: 600px;
-    margin: 0 auto;
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-form label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-form input, form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-form button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-form button:hover {
-    background-color: #555;
-}
-
-h1 {
-    animation: fadeIn 2s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-.filter {
-    margin-bottom: 20px;
-}
-
-.filter button {
-    padding: 10px;
-    margin-right: 5px;
-    background-color: #333;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.filter button:hover {
-    background-color: #555;
-}
-
+/* Gallery layout */
 .gallery {
     display: flex;
+    justify-content: space-between;
     flex-wrap: wrap;
-    gap: 10px;
-}
-
-.gallery img {
-    width: calc(33.33% - 10px); /* Adjust for gap */
+    gap: 10px; /* Reduce space between images */
+  }
+  
+  .gallery-image {
+    width: 30%; /* Increase image size */
     height: auto;
-    transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-.gallery img.large {
-    transform: scale(1.5);
-}
-
-.gallery img:hover {
-    transform: scale(1.1); /* Blagi zoom efekt na hover */
-    filter:brightness(0.7);
-}
-
-.fade-in {
-    animation: fadeIn 2s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  
+  .gallery-image:hover {
+    transform: scale(1.05); /* Add a slight zoom effect on hover */
+  }
+  
+  /* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.7); /* Black background with opacity */
+  }
+  
+  .modal-content {
+    background-color: white; /* White background for modal content */
+    margin: 10% auto; /* Center the modal */
+    padding: 10px; /* Padding inside modal */
+    width: 30%; /* Modal width */
+    border-radius: 10px; /* Rounded corners */
+  }
+  
+  .close {
+    color: #aaa; /* Light grey color for close button */
+    float: right; /* Position close button to the right */
+    font-size: 28px; /* Font size for close button */
+    font-weight: bold; /* Bold font for close button */
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black; /* Darker color on hover */
+    text-decoration: none; /* No underline on hover */
+    cursor: pointer; /* Pointer cursor on hover */
+  }
+  
+  #modal-image {
+    max-width: 100%; /* Responsive image */
+    border-radius: 5px; /* Rounded corners for image */
+    margin-bottom: 10px; /* Space below the image */
+  }
+  
+  /* Reduced textarea and button styles to fit smaller modal */
+  textarea {
+    width: 100%; /* Full width for textarea */
+    height: 60px; /* Height of textarea */
+    padding: 8px; /* Padding inside textarea */
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ccc; /* Border for textarea */
+    margin-bottom: 10px; /* Space below textarea */
+  }
+  
+  #submit-comment {
+    padding: 8px 15px; /* Padding for submit button */
+    background-color: #28a745; /* Green background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+  }
+  
+  /* Gallery styles */
+  .gallery {
+    display: flex; /* Flexbox layout */
+    justify-content: space-between; /* Space between items */
+    flex-wrap: wrap; /* Wrap items to the next line */
+    gap: 3px; /* Minimized space between images */
+  }
+  
+  .gallery-image {
+    width: 320px; /* Increased image size */
+    height: auto; /* Auto height */
+    border-radius: 5px; /* Rounded corners */
+    object-fit: cover; /* Cover image */
+  }
+  
